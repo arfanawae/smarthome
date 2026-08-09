@@ -1,0 +1,189 @@
+:root {
+  --bg: #0F1620;
+  --panel: #16202C;
+  --panel-border: #223145;
+  --line: #3A5570;
+  --text: #E8EDF2;
+  --text-muted: #7C93A8;
+  --amber: #FFB238;
+  --amber-glow: #FFD98A;
+  --teal: #5FD3C4;
+  --off-fill: #1B2733;
+
+  --font-display: 'Space Grotesk', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--bg);
+  background-image:
+    linear-gradient(rgba(58,85,112,0.10) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(58,85,112,0.10) 1px, transparent 1px);
+  background-size: 28px 28px;
+  color: var(--text);
+  font-family: var(--font-display);
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding: 28px clamp(16px, 4vw, 48px) 16px;
+  border-bottom: 1px solid var(--panel-border);
+}
+
+.topbar__eyebrow {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  color: var(--teal);
+}
+
+.topbar__title h1 {
+  margin: 6px 0 0;
+  font-size: clamp(20px, 3vw, 28px);
+  font-weight: 700;
+}
+
+.topbar__status {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--text-muted);
+}
+.topbar__status.online .dot { background: var(--teal); box-shadow: 0 0 8px var(--teal); }
+.topbar__status.online { color: var(--teal); }
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(280px, 1fr);
+  gap: 24px;
+  padding: 24px clamp(16px, 4vw, 48px) 48px;
+  align-items: start;
+}
+
+@media (max-width: 860px) {
+  .layout { grid-template-columns: 1fr; }
+}
+
+.plan-card {
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  border-radius: 14px;
+  padding: 20px;
+}
+
+.plan-hint {
+  margin: 14px 4px 0;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+svg .room rect {
+  fill: var(--off-fill);
+  stroke: var(--line);
+  stroke-width: 1.5;
+  cursor: pointer;
+  transition: fill 0.35s ease, filter 0.35s ease;
+}
+
+svg .room.on rect {
+  fill: var(--amber);
+  filter: drop-shadow(0 0 14px var(--amber-glow));
+}
+
+svg .room text.room-label {
+  fill: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  text-anchor: middle;
+  pointer-events: none;
+  transition: fill 0.35s ease;
+}
+svg .room.on text.room-label { fill: #2A1D02; font-weight: 700; }
+
+.room-label--sm { font-size: 11px; }
+
+.rooms-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.room-card {
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  border-radius: 12px;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.room-card__name {
+  font-weight: 700;
+  font-size: 15px;
+}
+
+.room-card__meta {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.room-card__controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.mode-btn {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  border: 1px solid var(--panel-border);
+  background: transparent;
+  color: var(--text-muted);
+  border-radius: 999px;
+  padding: 6px 10px;
+  cursor: pointer;
+}
+.mode-btn.auto { color: var(--teal); border-color: var(--teal); }
+
+.toggle {
+  width: 46px;
+  height: 26px;
+  border-radius: 999px;
+  background: var(--off-fill);
+  border: 1px solid var(--panel-border);
+  position: relative;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.toggle__knob {
+  position: absolute;
+  top: 2px; left: 2px;
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  background: var(--text-muted);
+  transition: transform 0.25s ease, background 0.25s ease;
+}
+.toggle.on { background: rgba(255,178,56,0.18); border-color: var(--amber); }
+.toggle.on .toggle__knob {
+  transform: translateX(20px);
+  background: var(--amber);
+  box-shadow: 0 0 8px var(--amber-glow);
+}

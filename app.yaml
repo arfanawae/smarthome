@@ -1,0 +1,8 @@
+name: SmartHome Auto Light
+description: "ระบบเปิด-ปิดไฟอัตโนมัติด้วยเซนเซอร์ PIR พร้อม dashboard แสดงสถานะไฟแต่ละห้อง"
+icon: 💡
+version: "1.0.0"
+
+# เปิดพอร์ตนี้ให้ dashboard เข้าถึงได้จากอุปกรณ์อื่นในวง WiFi เดียวกัน (เช่น มือถือ)
+ports:
+  - 5000
