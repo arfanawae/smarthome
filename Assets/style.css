@@ -94,7 +94,6 @@ body {
   -webkit-user-drag: none;
 }
 
-
 /* Individual room lighting:
    house-dark.png is the "all lights OFF" base.
    Each .room-light reveals the original bright image only inside its room. */
@@ -116,13 +115,13 @@ body {
 }
 
 /* Room boundaries match the architectural bays in the supplied image. */
-.light-bedroom  { clip-path: polygon(5% 22%, 36% 22%, 36% 51%, 5% 51%); }
-.light-bedroom2 { clip-path: polygon(70% 22%, 95% 22%, 95% 51%, 70% 51%); }
+.light-bedroom  { clip-path: polygon(6.5% 22%, 36% 22%, 36% 51%, 6.5% 51%); }
+.light-bedroom2 { clip-path: polygon(70% 22%, 93.5% 22%, 93.5% 51%, 70% 51%); }
 .light-storage  { clip-path: polygon(36% 22%, 54% 22%, 54% 51%, 36% 51%); }
 .light-bathroom { clip-path: polygon(54% 22%, 70% 22%, 70% 51%, 54% 51%); }
-.light-living   { clip-path: polygon(5% 53%, 36% 53%, 36% 93%, 5% 93%); }
-.light-kitchen  { clip-path: polygon(36% 53%, 67% 53%, 67% 93%, 36% 93%); }
-.light-garage   { clip-path: polygon(67% 53%, 97% 53%, 97% 93%, 67% 93%); }
+.light-living   { clip-path: polygon(6.5% 53%, 36% 53%, 36% 87%, 6.5% 87%); }
+.light-kitchen  { clip-path: polygon(36% 53%, 66% 53%, 66% 87%, 36% 87%); }
+.light-garage   { clip-path: polygon(65.5% 53%, 93.5% 53%, 93.5% 87%, 65.5% 87%); }
 
 .room-zone {
   position: absolute;
@@ -135,23 +134,25 @@ body {
   transition: background .25s, box-shadow .25s;
 }
 
+/* ปรับ effect ตอนเอาเมาส์ชี้ให้ดูนุ่มนวลขึ้น */
 .room-zone:hover {
-  background: rgba(95,211,196,.08);
-  box-shadow: inset 0 0 0 2px rgba(95,211,196,.45);
+  background: rgba(255, 255, 255, 0.03);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.15);
 }
 
+/* --- ลบกรอบสีเหลืองแข็งๆ ทิ้งไป ให้โชว์แค่แสงจาก .room-light แทน --- */
 .room-zone.on {
-  background: rgba(255,178,56,.10);
-  box-shadow: inset 0 0 0 2px rgba(255,178,56,.72), 0 0 24px rgba(255,178,56,.12);
+  background: transparent;
+  box-shadow: none;
 }
 
 .zone-bedroom  { left: 5%;  top: 22%; width: 30%; height: 29%; }
 .zone-bedroom2 { left: 70%; top: 22%; width: 25%; height: 29%; }
 .zone-storage  { left: 35%; top: 22%; width: 18%; height: 29%; }
 .zone-bathroom { left: 53%; top: 22%; width: 17%; height: 29%; }
-.zone-living   { left: 5%;  top: 53%; width: 30%; height: 39%; }
-.zone-kitchen  { left: 36%; top: 53%; width: 30%; height: 39%; }
-.zone-garage   { left: 67%; top: 53%; width: 30%; height: 39%; }
+.zone-living   { left: 5%;  top: 53%; width: 30%; height: 30%; }
+.zone-kitchen  { left: 36%; top: 53%; width: 30%; height: 30%; }
+.zone-garage   { left: 67%; top: 53%; width: 30%; height: 30%; }
 
 .room-badge {
   position: absolute;
@@ -168,6 +169,7 @@ body {
   font: 700 11px/1 var(--font-mono);
   pointer-events: none;
   box-shadow: 0 4px 16px rgba(0,0,0,.25);
+  transition: border-color 0.3s, color 0.3s;
 }
 
 .room-badge .lamp {
@@ -176,6 +178,7 @@ body {
   border-radius: 50%;
   background: #708090;
   box-shadow: 0 0 0 transparent;
+  transition: background 0.3s, box-shadow 0.3s;
 }
 
 .room-badge.on {
@@ -240,6 +243,7 @@ body {
   border-radius: 999px;
   padding: 6px 10px;
   cursor: pointer;
+  transition: all 0.2s;
 }
 .mode-btn.auto { color: var(--teal); border-color: var(--teal); }
 
@@ -252,6 +256,7 @@ body {
   position: relative;
   cursor: pointer;
   flex-shrink: 0;
+  transition: background 0.3s, border-color 0.3s;
 }
 
 .toggle__knob {
@@ -260,7 +265,7 @@ body {
   width: 20px; height: 20px;
   border-radius: 50%;
   background: var(--text-muted);
-  transition: transform .25s, background .25s;
+  transition: transform .25s cubic-bezier(0.4, 0, 0.2, 1), background .25s;
 }
 
 .toggle.on {

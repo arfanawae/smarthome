@@ -58,35 +58,51 @@ function render(newRooms) {
   });
 }
 
+// --- ส่วนที่แก้ไขให้กดได้หลายครั้ง ---
 async function toggleLight(roomId) {
   const room = rooms.find((r) => r.id === roomId);
-  const nextOn = !(room && room.light_on);
+  if (!room) return;
+
+  // สลับสถานะทันที แล้วสั่งอัปเดตหน้าจอ
+  room.light_on = !room.light_on;
+  render(rooms);
 
   try {
     await fetch(`/api/rooms/${roomId}/light`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ on: nextOn }),
+      body: JSON.stringify({ on: room.light_on }),
     });
   } catch (err) {
     console.error("toggleLight failed:", err);
+    // หากส่งข้อมูลไม่ไป ให้สลับค่ากลับ
+    room.light_on = !room.light_on;
+    render(rooms);
   }
 }
 
 async function toggleMode(roomId) {
   const room = rooms.find((r) => r.id === roomId);
-  const nextAuto = !(room && room.auto_mode);
+  if (!room) return;
+
+  // สลับสถานะทันที แล้วสั่งอัปเดตหน้าจอ
+  room.auto_mode = !room.auto_mode;
+  render(rooms);
 
   try {
     await fetch(`/api/rooms/${roomId}/mode`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ auto: nextAuto }),
+      body: JSON.stringify({ auto: room.auto_mode }),
     });
   } catch (err) {
     console.error("toggleMode failed:", err);
+    // หากส่งข้อมูลไม่ไป ให้สลับค่ากลับ
+    room.auto_mode = !room.auto_mode;
+    render(rooms);
   }
 }
+// --------------------------------
 
 // คลิกพื้นที่ห้องบนภาพ = สลับไฟ
 houseViewEl.addEventListener("click", (e) => {
