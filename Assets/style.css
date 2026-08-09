@@ -1,15 +1,15 @@
+/* SmartHome visual house dashboard */
 :root {
-  --bg: #0F1620;
-  --panel: #16202C;
-  --panel-border: #223145;
-  --line: #3A5570;
-  --text: #E8EDF2;
-  --text-muted: #7C93A8;
-  --amber: #FFB238;
-  --amber-glow: #FFD98A;
-  --teal: #5FD3C4;
-  --off-fill: #1B2733;
-
+  --bg: #0b1118;
+  --panel: #111b26;
+  --panel-border: #26384a;
+  --text: #edf3f8;
+  --text-muted: #8ea4b7;
+  --amber: #ffb238;
+  --amber-glow: #ffd98a;
+  --teal: #5fd3c4;
+  --off-fill: #1a2631;
+  --danger: #ff6b6b;
   --font-display: 'Space Grotesk', sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
 }
@@ -19,11 +19,10 @@
 body {
   margin: 0;
   min-height: 100vh;
-  background: var(--bg);
-  background-image:
-    linear-gradient(rgba(58,85,112,0.10) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(58,85,112,0.10) 1px, transparent 1px);
-  background-size: 28px 28px;
+  background:
+    radial-gradient(circle at 15% 0%, rgba(95,211,196,.08), transparent 32%),
+    radial-gradient(circle at 90% 10%, rgba(255,178,56,.06), transparent 28%),
+    var(--bg);
   color: var(--text);
   font-family: var(--font-display);
 }
@@ -39,14 +38,13 @@ body {
 .topbar__eyebrow {
   font-family: var(--font-mono);
   font-size: 12px;
-  letter-spacing: 0.12em;
+  letter-spacing: .12em;
   color: var(--teal);
 }
 
 .topbar__title h1 {
   margin: 6px 0 0;
   font-size: clamp(20px, 3vw, 28px);
-  font-weight: 700;
 }
 
 .topbar__status {
@@ -58,63 +56,151 @@ body {
   gap: 8px;
 }
 
-.dot {
-  width: 8px; height: 8px; border-radius: 50%;
-  background: var(--text-muted);
-}
+.dot { width: 8px; height: 8px; border-radius: 50%; background: var(--text-muted); }
 .topbar__status.online .dot { background: var(--teal); box-shadow: 0 0 8px var(--teal); }
 .topbar__status.online { color: var(--teal); }
 
 .layout {
   display: grid;
-  grid-template-columns: minmax(0, 1.4fr) minmax(280px, 1fr);
+  grid-template-columns: minmax(0, 1.65fr) minmax(300px, .75fr);
   gap: 24px;
   padding: 24px clamp(16px, 4vw, 48px) 48px;
   align-items: start;
 }
 
-@media (max-width: 860px) {
-  .layout { grid-template-columns: 1fr; }
+.plan-card {
+  background: rgba(17,27,38,.92);
+  border: 1px solid var(--panel-border);
+  border-radius: 18px;
+  padding: 14px;
+  box-shadow: 0 18px 55px rgba(0,0,0,.25);
 }
 
-.plan-card {
-  background: var(--panel);
-  border: 1px solid var(--panel-border);
-  border-radius: 14px;
-  padding: 20px;
+.house-view {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 12px;
+  background: #111;
+  line-height: 0;
+  isolation: isolate;
 }
+
+.house-image {
+  display: block;
+  width: 100%;
+  height: auto;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+
+/* Individual room lighting:
+   house-dark.png is the "all lights OFF" base.
+   Each .room-light reveals the original bright image only inside its room. */
+.room-light {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  background-image: url("house.png");
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .35s ease, filter .35s ease;
+  filter: brightness(1.05);
+}
+
+.room-light.on {
+  opacity: 1;
+}
+
+/* Room boundaries match the architectural bays in the supplied image. */
+.light-bedroom  { clip-path: polygon(5% 22%, 36% 22%, 36% 51%, 5% 51%); }
+.light-bedroom2 { clip-path: polygon(70% 22%, 95% 22%, 95% 51%, 70% 51%); }
+.light-storage  { clip-path: polygon(36% 22%, 54% 22%, 54% 51%, 36% 51%); }
+.light-bathroom { clip-path: polygon(54% 22%, 70% 22%, 70% 51%, 54% 51%); }
+.light-living   { clip-path: polygon(5% 53%, 36% 53%, 36% 93%, 5% 93%); }
+.light-kitchen  { clip-path: polygon(36% 53%, 67% 53%, 67% 93%, 36% 93%); }
+.light-garage   { clip-path: polygon(67% 53%, 97% 53%, 97% 93%, 67% 93%); }
+
+.room-zone {
+  position: absolute;
+  z-index: 2;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  cursor: pointer;
+  border-radius: 10px;
+  transition: background .25s, box-shadow .25s;
+}
+
+.room-zone:hover {
+  background: rgba(95,211,196,.08);
+  box-shadow: inset 0 0 0 2px rgba(95,211,196,.45);
+}
+
+.room-zone.on {
+  background: rgba(255,178,56,.10);
+  box-shadow: inset 0 0 0 2px rgba(255,178,56,.72), 0 0 24px rgba(255,178,56,.12);
+}
+
+.zone-bedroom  { left: 5%;  top: 22%; width: 30%; height: 29%; }
+.zone-bedroom2 { left: 70%; top: 22%; width: 25%; height: 29%; }
+.zone-storage  { left: 35%; top: 22%; width: 18%; height: 29%; }
+.zone-bathroom { left: 53%; top: 22%; width: 17%; height: 29%; }
+.zone-living   { left: 5%;  top: 53%; width: 30%; height: 39%; }
+.zone-kitchen  { left: 36%; top: 53%; width: 30%; height: 39%; }
+.zone-garage   { left: 67%; top: 53%; width: 30%; height: 39%; }
+
+.room-badge {
+  position: absolute;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 9px;
+  border: 1px solid rgba(255,255,255,.16);
+  border-radius: 999px;
+  background: rgba(7,12,17,.78);
+  backdrop-filter: blur(8px);
+  color: #fff;
+  font: 700 11px/1 var(--font-mono);
+  pointer-events: none;
+  box-shadow: 0 4px 16px rgba(0,0,0,.25);
+}
+
+.room-badge .lamp {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #708090;
+  box-shadow: 0 0 0 transparent;
+}
+
+.room-badge.on {
+  border-color: rgba(255,178,56,.75);
+  color: #ffe4a8;
+}
+
+.room-badge.on .lamp {
+  background: var(--amber);
+  box-shadow: 0 0 10px var(--amber-glow);
+}
+
+.badge-bedroom { left: 9%;  top: 25%; }
+.badge-bedroom2 { left: 73%; top: 25%; }
+.badge-storage { left: 38%; top: 25%; }
+.badge-bathroom{ left: 55%; top: 25%; }
+.badge-living  { left: 9%;  top: 57%; }
+.badge-kitchen { left: 40%; top: 57%; }
+.badge-garage  { left: 71%; top: 57%; }
 
 .plan-hint {
-  margin: 14px 4px 0;
-  font-family: var(--font-mono);
-  font-size: 12px;
+  margin: 12px 4px 2px;
+  font: 12px/1.5 var(--font-mono);
   color: var(--text-muted);
 }
-
-svg .room rect {
-  fill: var(--off-fill);
-  stroke: var(--line);
-  stroke-width: 1.5;
-  cursor: pointer;
-  transition: fill 0.35s ease, filter 0.35s ease;
-}
-
-svg .room.on rect {
-  fill: var(--amber);
-  filter: drop-shadow(0 0 14px var(--amber-glow));
-}
-
-svg .room text.room-label {
-  fill: var(--text-muted);
-  font-family: var(--font-mono);
-  font-size: 13px;
-  text-anchor: middle;
-  pointer-events: none;
-  transition: fill 0.35s ease;
-}
-svg .room.on text.room-label { fill: #2A1D02; font-weight: 700; }
-
-.room-label--sm { font-size: 11px; }
 
 .rooms-list {
   display: flex;
@@ -123,7 +209,7 @@ svg .room.on text.room-label { fill: #2A1D02; font-weight: 700; }
 }
 
 .room-card {
-  background: var(--panel);
+  background: rgba(17,27,38,.92);
   border: 1px solid var(--panel-border);
   border-radius: 12px;
   padding: 14px 16px;
@@ -133,14 +219,9 @@ svg .room.on text.room-label { fill: #2A1D02; font-weight: 700; }
   gap: 12px;
 }
 
-.room-card__name {
-  font-weight: 700;
-  font-size: 15px;
-}
-
+.room-card__name { font-weight: 700; font-size: 15px; }
 .room-card__meta {
-  font-family: var(--font-mono);
-  font-size: 11px;
+  font: 11px/1.4 var(--font-mono);
   color: var(--text-muted);
   margin-top: 2px;
 }
@@ -152,8 +233,7 @@ svg .room.on text.room-label { fill: #2A1D02; font-weight: 700; }
 }
 
 .mode-btn {
-  font-family: var(--font-mono);
-  font-size: 11px;
+  font: 11px var(--font-mono);
   border: 1px solid var(--panel-border);
   background: transparent;
   color: var(--text-muted);
@@ -173,17 +253,40 @@ svg .room.on text.room-label { fill: #2A1D02; font-weight: 700; }
   cursor: pointer;
   flex-shrink: 0;
 }
+
 .toggle__knob {
   position: absolute;
   top: 2px; left: 2px;
   width: 20px; height: 20px;
   border-radius: 50%;
   background: var(--text-muted);
-  transition: transform 0.25s ease, background 0.25s ease;
+  transition: transform .25s, background .25s;
 }
-.toggle.on { background: rgba(255,178,56,0.18); border-color: var(--amber); }
+
+.toggle.on {
+  background: rgba(255,178,56,.18);
+  border-color: var(--amber);
+}
+
 .toggle.on .toggle__knob {
   transform: translateX(20px);
   background: var(--amber);
   box-shadow: 0 0 8px var(--amber-glow);
+}
+
+@media (max-width: 1100px) {
+  .layout { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 650px) {
+  .topbar { align-items: flex-start; gap: 12px; }
+  .topbar__status { font-size: 11px; }
+  .plan-card { padding: 8px; }
+  .room-badge { font-size: 8px; padding: 4px 6px; gap: 4px; }
+  .room-badge .lamp { width: 6px; height: 6px; }
+  .plan-hint { font-size: 10px; }
+  .room-card { padding: 12px; }
+  .room-card__name { font-size: 13px; }
+  .room-card__controls { gap: 6px; }
+  .mode-btn { padding: 5px 8px; }
 }

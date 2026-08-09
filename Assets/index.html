@@ -9,62 +9,54 @@
 <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+<header class="topbar">
+  <div class="topbar__title">
+    <span class="topbar__eyebrow">SMARTHOME / ผังไฟฟ้าบ้าน</span>
+    <h1>สถานะไฟภายในบ้าน</h1>
+  </div>
+  <div class="topbar__status" id="connStatus">
+    <span class="dot"></span> เชื่อมต่อ...
+  </div>
+</header>
 
-  <header class="topbar">
-    <div class="topbar__title">
-      <span class="topbar__eyebrow">SMARTHOME / ผังไฟฟ้าบ้าน</span>
-      <h1>สถานะไฟภายในบ้าน</h1>
+<main class="layout">
+  <section class="plan-card">
+    <div class="house-view" id="houseView" aria-label="บ้านอัจฉริยะแสดงสถานะไฟแต่ละห้อง">
+      <img src="house-dark.png" alt="ภาพบ้านแบบมองตรง เห็นห้องภายในบ้าน" class="house-image house-dark" />
+      <div class="room-light light-bedroom" data-light-room="bedroom"></div>
+      <div class="room-light light-bedroom2" data-light-room="bedroom2"></div>
+      <div class="room-light light-storage" data-light-room="storage"></div>
+      <div class="room-light light-bathroom" data-light-room="bathroom"></div>
+      <div class="room-light light-living" data-light-room="living_room"></div>
+      <div class="room-light light-kitchen" data-light-room="kitchen"></div>
+      <div class="room-light light-garage" data-light-room="garage"></div>
+
+      <!-- ตำแหน่งพื้นที่กดบนภาพ: เปลี่ยนไฟของห้องนั้น -->
+      <button class="room-zone zone-bedroom" data-room="bedroom" aria-label="ห้องนอน"></button>
+      <button class="room-zone zone-bedroom2" data-room="bedroom2" aria-label="ห้องนอน 2"></button>
+      <button class="room-zone zone-storage" data-room="storage" aria-label="ห้องเก็บของ"></button>
+      <button class="room-zone zone-bathroom" data-room="bathroom" aria-label="ห้องน้ำ"></button>
+      <button class="room-zone zone-living" data-room="living_room" aria-label="ห้องนั่งเล่น"></button>
+      <button class="room-zone zone-kitchen" data-room="kitchen" aria-label="ห้องครัว"></button>
+      <button class="room-zone zone-garage" data-room="garage" aria-label="ที่จอดรถ"></button>
+
+      <div class="room-badge badge-bedroom"><span class="lamp"></span><span>ห้องนอน</span></div>
+      <div class="room-badge badge-bedroom2"><span class="lamp"></span><span>ห้องนอน 2</span></div>
+      <div class="room-badge badge-storage"><span class="lamp"></span><span>เก็บของ</span></div>
+      <div class="room-badge badge-bathroom"><span class="lamp"></span><span>ห้องน้ำ</span></div>
+      <div class="room-badge badge-living"><span class="lamp"></span><span>ห้องนั่งเล่น</span></div>
+      <div class="room-badge badge-kitchen"><span class="lamp"></span><span>ห้องครัว</span></div>
+      <div class="room-badge badge-garage"><span class="lamp"></span><span>ที่จอดรถ</span></div>
     </div>
-    <div class="topbar__status" id="connStatus">
-      <span class="dot"></span> เชื่อมต่อ...
-    </div>
-  </header>
+    <p class="plan-hint">คลิกบริเวณห้องบนภาพเพื่อสั่งเปิด/ปิดไฟ หรือใช้การ์ดด้านขวา</p>
+  </section>
 
-  <main class="layout">
-    <section class="plan-card">
-      <svg id="houseSvg" viewBox="0 0 500 380" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="ผังบ้านแสดงสถานะไฟแต่ละห้อง">
-        <!-- เส้นกรอบบ้านรวม (เส้นบลูปรินต์) -->
-        <rect x="14" y="14" width="472" height="352" fill="none" stroke="#3A5570" stroke-width="1.5" stroke-dasharray="2 4" />
+  <section class="rooms-list" id="roomsList" aria-label="รายการควบคุมไฟแต่ละห้อง">
+    <!-- room cards injected by app.js -->
+  </section>
+</main>
 
-        <g class="room" data-room="living_room">
-          <rect x="20" y="20" width="260" height="180" />
-          <text x="150" y="115" class="room-label">ห้องนั่งเล่น</text>
-        </g>
-
-        <g class="room" data-room="kitchen">
-          <rect x="300" y="20" width="180" height="100" />
-          <text x="390" y="75" class="room-label">ห้องครัว</text>
-        </g>
-
-        <g class="room" data-room="bathroom">
-          <rect x="300" y="140" width="90" height="60" />
-          <text x="345" y="174" class="room-label room-label--sm">ห้องน้ำ</text>
-        </g>
-
-        <g class="room" data-room="storage">
-          <rect x="410" y="140" width="70" height="60" />
-          <text x="445" y="174" class="room-label room-label--sm">เก็บของ</text>
-        </g>
-
-        <g class="room" data-room="bedroom">
-          <rect x="20" y="220" width="180" height="140" />
-          <text x="110" y="294" class="room-label">ห้องนอน</text>
-        </g>
-
-        <g class="room" data-room="garage">
-          <rect x="220" y="220" width="260" height="140" />
-          <text x="350" y="294" class="room-label">ที่จอดรถ</text>
-        </g>
-      </svg>
-      <p class="plan-hint">แตะห้องในผังหรือใช้การ์ดด้านล่างเพื่อสั่งเปิด/ปิดไฟด้วยตนเอง</p>
-    </section>
-
-    <section class="rooms-list" id="roomsList" aria-label="รายการควบคุมไฟแต่ละห้อง">
-      <!-- room cards injected by app.js -->
-    </section>
-  </main>
-
-  <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
-  <script src="app.js"></script>
+<script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+<script src="app.js"></script>
 </body>
 </html>
